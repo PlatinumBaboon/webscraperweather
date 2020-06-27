@@ -1,0 +1,37 @@
+import requests
+from bs4 import BeautifulSoup
+import smtplib
+import pandas as pd
+
+Url = "https://www.rte.ie/weather/22259-dublin/"
+headers = {"User-Agent":"Mozilla/5.0"}
+page = requests.get(Url, headers=headers)
+soup = BeautifulSoup(page.content, 'html.parser')
+
+day = soup.find_all(class_='day-name')
+Temp = soup.find_all(class_='day-temperature')
+Weather = {'Day': [day[0], day[1], day[2], day[3], day[4], day[5], day[6]],
+           'Temp': [Temp[0], Temp[1], Temp[2], Temp[3], Temp[4], Temp[5], Temp[6]],
+          }
+data = pd.DataFrame(Weather, columns=['Day', 'Temp'])
+print(data)
+
+def send_mail():
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.ehlo()
+    server.starttls()
+    server.ehlo()
+    server.login('xxx@gmail.com', 'xxxxx')
+
+    subject = "Weather"
+    body = data
+
+    msg = f"Subject: {subject}\n\n{body}"
+    server.sendmail(
+        'xxxx@gmail.com',
+        'xxxxx@gmail.com',
+        msg
+    )
+    print("Email Sent!!")
+    server.quit()
+send_mail()
