@@ -1,49 +1,64 @@
 import requests
-from bs4 import BeautifulSoup
-import smtplib
 import pandas as pd
+from bs4 import BeautifulSoup
 
-def Page_Url(Url):
-    headers = {"User-Agent": "Mozilla/5.0"}
-    page = requests.get(Url, headers=headers)
-    soup: BeautifulSoup = BeautifulSoup(page.content, 'html.parser')
-    return soup
+class RteWeather:
 
-day = Page_Url("https://www.rte.ie/weather/22259-dublin/").find_all(class_='day-name')
-Temp = Page_Url("https://www.rte.ie/weather/22259-dublin/").find_all(class_='day-temperature')
-Weather = {'Day': [day[0].text, day[1].text, day[2].text, day[3].text, day[4].text, day[5].text, day[6].text],
-           'Temp': [Temp[0].text[0:2], Temp[1].text[0:2], Temp[2].text[0:2], Temp[3].text[0:2], Temp[4].text[0:2], Temp[5].text[0:2], Temp[6].text[0:2]],
-          }
-data = pd.DataFrame(Weather, columns=['Day', 'Temp'])
-print(data)
+    Temp1 = []
+    day1 = []
+    time1 = []
+    hour_temp1 = []
+    rain1 = []
+    icon = []
+    wind1 = []
 
-def send_mail():
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.ehlo()
-    server.starttls()
-    server.ehlo()
-    server.login('xxx@gmail.com', 'xxxxx')
+    def page_Url(Url):
+        headers = {"User-Agent": "Mozilla/5.0"}
+        page = requests.get(Url, headers=headers)
+        soup: BeautifulSoup = BeautifulSoup(page.content, 'html.parser')
+        return soup
 
-    subject = "Weather"
-    body = data
+    Url1 = page_Url("https://www.rte.ie/weather/22259-dublin/")
 
-    msg = f"Subject: {subject}\n\n{body}"
-    server.sendmail(
-        'xxxx@gmail.com',
-        'xxxxx@gmail.com',
-        msg
-    )
-    print("Email Sent!!")
-    server.quit()
-send_mail()
+    time = Url1.find_all(class_='hour-title')
+    hour_temp = Url1.find_all(class_='temperature')
+    rain = Url1.find_all(class_='rain-label visible')
+    wind = Url1.find_all(class_='wind-label visible')
+    weather = Url1.find_all(class_='forecast-icon')
+    day = Url1.find_all(class_='day-name')
+    Temp = Url1.find_all(class_='day-temperature')
 
-def weather():
-    if num > 20:
-        send_mail(data + "Hot Today")
-    elif num < 10:
-        send_mail(data + "Cold Today" +
-        "Min Week Temp: " +
-        data.min())
-    else:
-        send_mail(data + "Mild Today")
-#weather()
+    for e in Temp:
+        Temp1.append(e.text)
+    for e in day:
+        day1.append(e.text)
+    for e in time[0:13]:
+        time1.append(e.text)
+    for e in hour_temp[2:15]:
+        hour_temp1.append(e.text)
+    for e in rain[0:13]:
+        rain1.append(e.text)
+    for e in wind[0:13]:
+        wind1.append(e.text)
+    for i in weather[7:20]:
+        num = str(i).split('"')
+        for e in num:
+            if e == ' title=':
+                firstnum = num.index(e) + 1
+                icon.append(num[firstnum].title())
+
+    Weather3 = {'Time': time1,
+               'Temp': hour_temp1,
+                'Rain': rain1,
+                'Wind': wind1,
+                'Weather': icon,
+               }
+    Weather2 = {'Day': day1[0:7],
+                'Temp': Temp1[0:7]
+               }
+
+    hourlyweather = pd.DataFrame(Weather3, columns=['Time', 'Weather', 'Temp', 'Rain', 'Wind'])
+    dailytemp = pd.DataFrame(Weather2, columns=['Day', 'Temp'])
+
+print(RteWeather.dailytemp)
+print(RteWeather.hourlyweather)
