@@ -2,17 +2,17 @@ from tkinter import Tk, Frame, Label
 from tkinter.ttk import Notebook
 from DublinWeather import AnalyseWeather
 
-window=Tk()
+window = Tk()
 window.title("Dublin Weather")
 window.geometry("1000x500")
 
-frame2=Frame(window)
+frame2 = Frame(window)
 frame2.pack(fill="both")
 
-tablayout=Notebook(frame2)
+tablayout = Notebook(frame2)
 
 #tab1
-tab1=Frame(tablayout)
+tab1 = Frame(tablayout)
 tab1.pack(fill="both")
 
 for row in range(13):
@@ -73,7 +73,7 @@ for row in range(13):
                 for i in AnalyseWeather.Weather3['Rain']:
                     for row in range(1, 14):
                         if AnalyseWeather.Weather3['Rain'].index(i) == range(1, 14).index(row):
-                            label = Label(tab1, text=i, bg="green", fg="black", padx=3, pady=3)
+                            label = Label(tab1, text=str(i), bg="green", fg="black", padx=3, pady=3)
                             label.config(font=('Arial', 12))
                             label.grid(row=row, column=column, sticky="nsew", padx=1, pady=1)
                             tab1.grid_columnconfigure(column, weight=1)
@@ -81,7 +81,7 @@ for row in range(13):
                 for i in AnalyseWeather.Weather3['Wind']:
                     for row in range(1, 14):
                         if AnalyseWeather.Weather3['Wind'].index(i) == range(1, 14).index(row):
-                            label = Label(tab1, text=i, bg="grey", fg="black", padx=3, pady=3)
+                            label = Label(tab1, text=str(i), bg="grey", fg="black", padx=3, pady=3)
                             label.config(font=('Arial', 12))
                             label.grid(row=row, column=column, sticky="nsew", padx=1, pady=1)
                             tab1.grid_columnconfigure(column, weight=1)
@@ -89,7 +89,7 @@ for row in range(13):
 tablayout.add(tab1,text="Hourly Weather")
 
 #tab2
-tab1=Frame(tablayout)
+tab1 = Frame(tablayout)
 tab1.pack(fill="both")
 
 for row in range(8):
@@ -131,7 +131,7 @@ for row in range(8):
                 for i in AnalyseWeather.Weather2['Day']:
                     for row in range(1, 8):
                         if AnalyseWeather.Weather2['Day'].index(i) == range(1, 8).index(row):
-                            label = Label(tab1, text=i, bg="green", fg="black", padx=3, pady=3)
+                            label = Label(tab1, text=str(i), bg="green", fg="black", padx=3, pady=3)
                             label.config(font=('Arial', 12))
                             label.grid(row=row, column=column, sticky="nsew", padx=1, pady=1)
                             tab1.grid_columnconfigure(column, weight=1)
@@ -139,7 +139,6 @@ for row in range(8):
                 for i in AnalyseWeather.Weather2['Temp-High']:
                     for row in range(1, 8):
                         if AnalyseWeather.Weather2['Temp-High'].index(i) == range(1, 8).index(row):
-                            print(i)
                             label = Label(tab1, text=str(i), bg="red", fg="black", padx=3, pady=3)
                             label.config(font=('Arial', 12))
                             label.grid(row=row, column=column, sticky="nsew", padx=1, pady=1)
@@ -156,7 +155,7 @@ for row in range(8):
                 for i in AnalyseWeather.Weather2['Weather']:
                     for row in range(1, 8):
                         if AnalyseWeather.Weather2['Weather'].index(i) == range(1, 8).index(row):
-                            label = Label(tab1, text=i, bg="green", fg="black", padx=3, pady=3)
+                            label = Label(tab1, text=str(i), bg="green", fg="black", padx=3, pady=3)
                             label.config(font=('Arial', 12))
                             label.grid(row=row, column=column, sticky="nsew", padx=1, pady=1)
                             tab1.grid_columnconfigure(column, weight=1)
@@ -164,7 +163,7 @@ for row in range(8):
                 for i in AnalyseWeather.Weather2['Rain']:
                     for row in range(1, 8):
                         if AnalyseWeather.Weather2['Rain'].index(i) == range(1, 8).index(row):
-                            label = Label(tab1, text=i, bg="grey", fg="black", padx=3, pady=3)
+                            label = Label(tab1, text=str(i), bg="grey", fg="black", padx=3, pady=3)
                             label.config(font=('Arial', 12))
                             label.grid(row=row, column=column, sticky="nsew", padx=1, pady=1)
                             tab1.grid_columnconfigure(column, weight=1)
@@ -172,13 +171,12 @@ for row in range(8):
                 for i in AnalyseWeather.Weather2['Wind']:
                     for row in range(1, 8):
                         if AnalyseWeather.Weather2['Wind'].index(i) == range(1, 8).index(row):
-                            label = Label(tab1, text=i, bg="grey", fg="black", padx=3, pady=3)
+                            label = Label(tab1, text=str(i), bg="grey", fg="black", padx=3, pady=3)
                             label.config(font=('Arial', 12))
                             label.grid(row=row, column=column, sticky="nsew", padx=1, pady=1)
                             tab1.grid_columnconfigure(column, weight=1)
 
-tablayout.add(tab1,text="Daily Weather")
-
-tablayout.pack(fill="both")
+tablayout.add(tab1,text = "Daily Weather")
+tablayout.pack(fill = "both")
 
 window.mainloop()
