@@ -2,8 +2,15 @@ import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 
-class RteWeather:
 
+def page_url(url):
+    headers = {"User-Agent": "Mozilla/5.0"}
+    page = requests.get(url, headers=headers)
+    soup: BeautifulSoup = BeautifulSoup(page.content, 'html.parser')
+    return soup
+
+
+class RteWeather:
     Temp1 = []
     day1 = []
     time1 = []
@@ -12,13 +19,7 @@ class RteWeather:
     icon = []
     wind1 = []
 
-    def page_Url(Url):
-        headers = {"User-Agent": "Mozilla/5.0"}
-        page = requests.get(Url, headers=headers)
-        soup: BeautifulSoup = BeautifulSoup(page.content, 'html.parser')
-        return soup
-
-    Url1 = page_Url("https://www.rte.ie/weather/22259-dublin/")
+    Url1 = page_url("https://www.rte.ie/weather/22259-dublin/")
 
     time = Url1.find_all(class_='hour-title')
     hour_temp = Url1.find_all(class_='temperature')
@@ -52,16 +53,16 @@ class RteWeather:
                 'Rain': rain1,
                 'Wind': wind1,
                 'Weather': icon,
-               }
+                }
     Weather2 = {'Day': day1[0:7],
                 'Temp': Temp1[0:7]
-               }
+                }
 
     hourlyweather = pd.DataFrame(Weather3, columns=['Time', 'Temp', 'Weather', 'Rain', 'Wind'])
     dailytemp = pd.DataFrame(Weather2, columns=['Day', 'Temp'])
 
-class ACCUWeather:
 
+class ACCUWeather:
     HTemp = []
     day1 = []
     Ltemp = []
@@ -78,15 +79,9 @@ class ACCUWeather:
     rain3B = []
     wind3B = []
 
-    def page_Url(Url):
-        headers = {"User-Agent": "Mozilla/5.0"}
-        page = requests.get(Url, headers=headers)
-        soup: BeautifulSoup = BeautifulSoup(page.content, 'html.parser')
-        return soup
-
-    Url1 = page_Url("https://www.accuweather.com/en/ie/dublin/207931/daily-weather-forecast/207931")
-    Url2 = page_Url("https://www.accuweather.com/en/ie/dublin/207931/hourly-weather-forecast/207931")
-    Url3 = page_Url("https://www.accuweather.com/en/ie/dublin/207931/hourly-weather-forecast/207931?day=2")
+    Url1 = page_url("https://www.accuweather.com/en/ie/dublin/207931/daily-weather-forecast/207931")
+    Url2 = page_url("https://www.accuweather.com/en/ie/dublin/207931/hourly-weather-forecast/207931")
+    Url3 = page_url("https://www.accuweather.com/en/ie/dublin/207931/hourly-weather-forecast/207931?day=2")
 
     Day = Url1.find_all(class_='module-header dow date')
     high_temp = Url1.find_all(class_='high')
@@ -181,7 +176,7 @@ class ACCUWeather:
                 wind3B.append(' '.join(f))
 
     if len(time1) < 13:
-        for i in time1B[0:(13-len(time1))]:
+        for i in time1B[0:(13 - len(time1))]:
             time1.append(i)
     if len(temp1) < 13:
         for i in temp1B[0:(13 - len(temp1))]:
@@ -208,8 +203,10 @@ class ACCUWeather:
                 'Rain': rain3[0:13],
                 'Wind': wind3[0:13],
                 }
+
     hourlyweather = pd.DataFrame(Weather3, columns=['Time', 'Temp', 'Weather', 'Rain', 'Wind'])
     dailytemp = pd.DataFrame(Weather2, columns=['Day', 'Temp-High', 'Temp-Low', 'Weather', 'Rain'])
+
 
 class Weathercom:
     htemp = []
@@ -217,7 +214,7 @@ class Weathercom:
     Ltemp = []
     wind3 = []
     rain1 = []
-    Weather1= []
+    Weather1 = []
     time1 = []
     temp1B = []
     Weather1B = []
@@ -225,26 +222,31 @@ class Weathercom:
     wind3B = []
     rain3 = []
 
-    def page_Url(Url):
-        headers = {"User-Agent": "Mozilla/5.0"}
-        page = requests.get(Url, headers=headers)
-        soup: BeautifulSoup = BeautifulSoup(page.content, 'html.parser')
-        return soup
+    Url1 = page_url(
+        'https://weather.com/en-IE/weather/tenday/l/15128cb9dec08a69b64d22f987d80c90694877543bfc1e7083db3b20c0526b82')
+    Url2 = page_url(
+        'https://weather.com/en-IE/weather/hourbyhour/l/15128cb9dec08a69b64d22f987d80c90694877543bfc1e7083db3b20c0526b82')
 
-    Url1 = page_Url('https://weather.com/en-IE/weather/tenday/l/15128cb9dec08a69b64d22f987d80c90694877543bfc1e7083db3b20c0526b82')
-    Url2 = page_Url('https://weather.com/en-IE/weather/hourbyhour/l/15128cb9dec08a69b64d22f987d80c90694877543bfc1e7083db3b20c0526b82')
-
-    Day = Url1.find_all(class_='_-_-components-src-molecule-DaypartDetails-DetailsSummary-DetailsSummary--daypartName--kbngc')
-    HTemp = Url1.find_all(class_='_-_-components-src-molecule-DaypartDetails-DetailsSummary-DetailsSummary--highTempValue--3PjlX')
-    LTemp = Url1.find_all(class_='_-_-components-src-molecule-DaypartDetails-DetailsSummary-DetailsSummary--lowTempValue--2tesQ')
-    Weather = Url1.find_all(class_='_-_-components-src-molecule-DaypartDetails-DetailsSummary-DetailsSummary--extendedData--307Ax')
-    Rain = Url1.find_all(class_='_-_-components-src-molecule-DaypartDetails-DetailsSummary-DetailsSummary--precip--1a98O')
+    Day = Url1.find_all(
+        class_='_-_-components-src-molecule-DaypartDetails-DetailsSummary-DetailsSummary--daypartName--kbngc')
+    HTemp = Url1.find_all(
+        class_='_-_-components-src-molecule-DaypartDetails-DetailsSummary-DetailsSummary--highTempValue--3PjlX')
+    LTemp = Url1.find_all(
+        class_='_-_-components-src-molecule-DaypartDetails-DetailsSummary-DetailsSummary--lowTempValue--2tesQ')
+    Weather = Url1.find_all(
+        class_='_-_-components-src-molecule-DaypartDetails-DetailsSummary-DetailsSummary--extendedData--307Ax')
+    Rain = Url1.find_all(
+        class_='_-_-components-src-molecule-DaypartDetails-DetailsSummary-DetailsSummary--precip--1a98O')
     Wind = Url1.find_all(class_='_-_-components-src-atom-WeatherData-Wind-Wind--windWrapper--3Ly7c undefined')
 
-    time = Url2.find_all(class_='_-_-components-src-molecule-DaypartDetails-DetailsSummary-DetailsSummary--daypartName--kbngc')
-    temp = Url2.find_all(class_='_-_-components-src-molecule-DaypartDetails-DetailsSummary-DetailsSummary--tempValue--jEiXE')
-    weather = Url2.find_all(class_='_-_-components-src-molecule-DaypartDetails-DetailsSummary-DetailsSummary--extendedData--307Ax')
-    Rain1 = Url2.find_all(class_='_-_-components-src-molecule-DaypartDetails-DetailsSummary-DetailsSummary--precip--1a98O')
+    time = Url2.find_all(
+        class_='_-_-components-src-molecule-DaypartDetails-DetailsSummary-DetailsSummary--daypartName--kbngc')
+    temp = Url2.find_all(
+        class_='_-_-components-src-molecule-DaypartDetails-DetailsSummary-DetailsSummary--tempValue--jEiXE')
+    weather = Url2.find_all(
+        class_='_-_-components-src-molecule-DaypartDetails-DetailsSummary-DetailsSummary--extendedData--307Ax')
+    Rain1 = Url2.find_all(
+        class_='_-_-components-src-molecule-DaypartDetails-DetailsSummary-DetailsSummary--precip--1a98O')
     Wind1 = Url2.find_all(class_='_-_-components-src-atom-WeatherData-Wind-Wind--windWrapper--3Ly7c undefined')
 
     for e in Day:
@@ -283,24 +285,19 @@ class Weathercom:
                 'Rain': rain3[0:13],
                 'Wind': wind3B[0:13],
                 }
-    
+
     hourlyweather = pd.DataFrame(Weather3, columns=['Time', 'Temp', 'Weather', 'Rain', 'Wind'])
     dailytemp = pd.DataFrame(Weather2, columns=['Day', 'Temp-High', 'Temp-Low', 'Weather', 'Rain', 'Wind'])
+
 
 class DarkSky:
     HTemp = []
     day1 = []
     Ltemp = []
-    weather1 = [] 
+    weather1 = []
     rain3 = []
 
-    def page_Url(Url):
-        headers = {"User-Agent": "Mozilla/5.0"}
-        page = requests.get(Url, headers=headers)
-        soup: BeautifulSoup = BeautifulSoup(page.content, 'html.parser')
-        return soup
-
-    Url1 = page_Url('https://darksky.net/forecast/53.3805,-6.2711/ca12/en')
+    Url1 = page_url('https://darksky.net/forecast/53.3805,-6.2711/ca12/en')
 
     Day = Url1.find_all(class_='name')
     mintemp = Url1.find_all(class_='minTemp')
@@ -325,7 +322,7 @@ class DarkSky:
         weather1.append(pu)
     for e in rain:
         u = e.text
-        rain3.append(u+'mm')
+        rain3.append(u + 'mm')
 
     Weather2 = {'Day': day1[0:7],
                 'Temp-High': HTemp[0:7],
@@ -333,8 +330,9 @@ class DarkSky:
                 'Weather': weather1[0:7],
                 'Rain': rain3[0:7],
                 }
-    
+
     dailytemp = pd.DataFrame(Weather2, columns=['Day', 'Temp-High', 'Temp-Low', 'Weather', 'Rain'])
+
 
 class AnalyseWeather:
     HTemp = []
@@ -343,15 +341,18 @@ class AnalyseWeather:
     rain3 = []
     wind3 = []
     rain3B = []
-    
+
     for i in range(0, 7):
-        Big = max([ACCUWeather.Weather2['Temp-High'][i][0:2], RteWeather.Weather2['Temp'][i][0:2],DarkSky.Weather2['Temp-High'][i], Weathercom.Weather2['Temp-High'][i][0:2]])
-        HTemp.append(Big+RteWeather.Weather2['Temp'][0][2:4])
+        Big = max([ACCUWeather.Weather2['Temp-High'][i][0:2], RteWeather.Weather2['Temp'][i][0:2],
+                   DarkSky.Weather2['Temp-High'][i], Weathercom.Weather2['Temp-High'][i][0:2]])
+        HTemp.append(Big + RteWeather.Weather2['Temp'][0][2:4])
     for i in range(0, 7):
-        Big = min([ACCUWeather.Weather2['Temp-Low'][i][0:2], RteWeather.Weather2['Temp'][i][0:2],DarkSky.Weather2['Temp-Low'][i], Weathercom.Weather2['Temp-Low'][i][0:2]])
-        Ltemp.append(Big+RteWeather.Weather2['Temp'][0][2:4])
+        Big = min([ACCUWeather.Weather2['Temp-Low'][i][0:2], RteWeather.Weather2['Temp'][i][0:2],
+                   DarkSky.Weather2['Temp-Low'][i], Weathercom.Weather2['Temp-Low'][i][0:2]])
+        Ltemp.append(Big + RteWeather.Weather2['Temp'][0][2:4])
     for i in range(0, 7):
-        perc = ((int(ACCUWeather.Weather2['Rain'][i].replace('%', '')) + int(Weathercom.Weather2['Rain'][i].replace('%', '')))/2)
+        perc = ((int(ACCUWeather.Weather2['Rain'][i].replace('%', '')) + int(
+            Weathercom.Weather2['Rain'][i].replace('%', ''))) / 2)
         rain3.append(str(perc) + '%' + ' ' + DarkSky.Weather2['Rain'][i])
     for i in range(0, 13):
         a1 = ACCUWeather.Weather3['Temp'][i]
@@ -372,7 +373,7 @@ class AnalyseWeather:
             f.append(e)
         f.pop(-1)
         c = ''.join(d)
-        Big = (int(a) + int(b) + int(c))/3
+        Big = (int(a) + int(b) + int(c)) / 3
         B = str(Big).split('.')
         temp1.append(B[0] + RteWeather.Weather3['Temp'][0][-2] + RteWeather.Weather3['Temp'][0][-1])
     for i in range(0, 13):
@@ -388,7 +389,7 @@ class AnalyseWeather:
             e1.append(e)
         e1.pop(-1)
         b = ''.join(e1)
-        Big = str((int(a) + int(b))/2) + y
+        Big = str((int(a) + int(b)) / 2) + y
         rain3B.append(Big)
     for i in range(0, 13):
         a1 = ACCUWeather.Weather3['Wind'][i]
@@ -405,7 +406,7 @@ class AnalyseWeather:
         c.pop(0)
         c.pop(-1)
         c2 = ''.join(a)
-        q = str((int(a2) + int(b2) + int(c2))/3).split('.')
+        q = str((int(a2) + int(b2) + int(c2)) / 3).split('.')
         if int(q[-1][0]) > 4:
             wind3.append(j + ' ' + str(int(q[0]) + 1) + ' ' + g)
         else:
@@ -424,9 +425,10 @@ class AnalyseWeather:
                 'Rain': rain3B[0:13],
                 'Wind': wind3[0:13],
                 }
-    
+
     hourlyweather = pd.DataFrame(Weather3, columns=['Time', 'Temp', 'Weather', 'Rain', 'Wind'])
     dailytemp = pd.DataFrame(Weather2, columns=['Day', 'Temp-High', 'Temp-Low', 'Weather', 'Rain', 'Wind'])
+
 
 print(AnalyseWeather.hourlyweather)
 print(AnalyseWeather.dailytemp)
